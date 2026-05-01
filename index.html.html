@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>刺身判別</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  :root {
+    --ink: #1a1614;
+    --paper: #f5f0e8;
+    --paper-deep: #ebe3d5;
+    --vermilion: #b13a2c;
+    --vermilion-deep: #8b2818;
+    --gold: #b8924a;
+    --sumi: #2c2520;
+    --mist: rgba(26, 22, 20, 0.08);
+  }
+
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  body {
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(184, 146, 74, 0.06) 0%, transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(177, 58, 44, 0.04) 0%, transparent 40%);
+    padding: 24px 20px 40px;
+    max-width: 560px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0.04 0' /%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' /%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.6;
+  }
+
+  .container { position: relative; z-index: 2; }
+
+  /* ヘッダー */
+  header {
+    text-align: center;
+    padding: 12px 0 28px;
+    position: relative;
+  }
+
+  .title-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .seal {
+    width: 48px;
+    height: 48px;
+    background: var(--vermilion);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    color: var(--paper);
+    font-size: 22px;
+    letter-spacing: -2px;
+    box-shadow: 0 2px 8px rgba(177, 58, 44, 0.3);
+    transform: rotate(-3deg);
+  }
+
+  h1 {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 32px;
+    letter-spacing: 0.04em;
+    color: var(--sumi);
+  }
+
+  .tagline {
+    margin-top: 8px;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .divider {
+    margin: 16px auto 0;
+    width: 60px;
+    height: 1px;
+    background: var(--ink);
+    opacity: 0.2;
+  }
+
+  /* 設定エリア */
+  .setup {
+    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--mist);
+    border-radius: 12px;
+    padding: 18px;
+    margin-bottom: 20px;
+  }
+
+  .setup.collapsed { padding: 12px 18px; }
+
+  .setup-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    color: var(--sumi);
+  }
+
+  .setup-header span:last-child {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+  }
+
+  .setup-body {
+    margin-top: 14px;
+    transition: all 0.3s;
+  }
+
+  .setup.collapsed .setup-body { display: none; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    color: var(--sumi);
+    margin-bottom: 6px;
+    letter-spacing: 0.1em;
+    opacity: 0.7;
+  }
+
+  input[type="password"], input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--mist);
+    border-radius: 8px;
+    background: var(--paper);
+    font-size: 14px;
+    color: var(--ink);
+    font-family: inherit;
+  }
+
+  input:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+
+  .help {
+    font-size: 11px;
+    color: var(--sumi);
+    opacity: 0.6;
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+
+  .help a { color: var(--vermilion); text-decoration: underline; }
+
+  /* メイン操作エリア */
+  .main-area {
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 8px 24px rgba(26, 22, 20, 0.06);
+    margin-bottom: 20px;
+  }
+
+  .photo-area {
+    aspect-ratio: 1;
+    border: 2px dashed var(--mist);
+    border-radius: 12px;
+    background: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 16px;
+  }
+
+  .photo-area.has-image { border-style: solid; border-color: var(--gold); }
+
+  .photo-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .placeholder {
+    text-align: center;
+    color: var(--ink);
+    opacity: 0.4;
+    padding: 20px;
+  }
+
+  .placeholder-icon {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 56px;
+    line-height: 1;
+    margin-bottom: 8px;
+    color: var(--vermilion);
+    opacity: 0.5;
+  }
+
+  .placeholder-text {
+    font-size: 13px;
+    letter-spacing: 0.1em;
+  }
+
+  /* ボタン */
+  .button-row {
+    display: flex;
+    gap: 10px;
+  }
+
+  button {
+    flex: 1;
+    padding: 14px 16px;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-touch-callout: none;
+  }
+
+  button:active { transform: scale(0.97); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .btn-primary {
+    background: var(--sumi);
+    color: var(--paper);
+  }
+
+  .btn-secondary {
+    background: var(--paper-deep);
+    color: var(--sumi);
+  }
+
+  .btn-judge {
+    width: 100%;
+    background: var(--vermilion);
+    color: var(--paper);
+    font-size: 16px;
+    padding: 16px;
+    margin-top: 12px;
+    box-shadow: 0 4px 12px rgba(177, 58, 44, 0.25);
+  }
+
+  .btn-judge:disabled { background: #999; box-shadow: none; }
+
+  input[type="file"] { display: none; }
+
+  /* 結果表示 */
+  .result {
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.04),
+      0 8px 24px rgba(26, 22, 20, 0.06);
+    border-top: 3px solid var(--vermilion);
+    animation: fadeUp 0.5s ease-out;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .result-name {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--sumi);
+    text-align: center;
+    margin-bottom: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  .result-confidence {
+    text-align: center;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+  }
+
+  .result-divider {
+    width: 40px;
+    height: 1px;
+    background: var(--ink);
+    opacity: 0.2;
+    margin: 16px auto;
+  }
+
+  .info-block {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px dashed var(--mist);
+  }
+
+  .info-block:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  .info-label {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    color: var(--vermilion);
+    margin-bottom: 6px;
+    letter-spacing: 0.15em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .info-label::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    background: var(--vermilion);
+    border-radius: 50%;
+  }
+
+  .info-content {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--sumi);
+  }
+
+  /* ローディング */
+  .loading {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .loading-text {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    color: var(--sumi);
+    letter-spacing: 0.2em;
+    opacity: 0.7;
+  }
+
+  .dots {
+    display: inline-block;
+    width: 40px;
+    text-align: left;
+  }
+
+  .dots::after {
+    content: '';
+    animation: dots 1.5s infinite;
+  }
+
+  @keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '・'; }
+    60% { content: '・・'; }
+    80%, 100% { content: '・・・'; }
+  }
+
+  /* エラー */
+  .error {
+    background: rgba(177, 58, 44, 0.08);
+    border-left: 3px solid var(--vermilion);
+    padding: 14px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    color: var(--vermilion-deep);
+    line-height: 1.6;
+  }
+
+  /* フッター */
+  footer {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 10px;
+    color: var(--sumi);
+    opacity: 0.4;
+    letter-spacing: 0.2em;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="title-wrap">
+      <div class="seal">鮮</div>
+      <div>
+        <h1>刺身判別</h1>
+      </div>
+    </div>
+    <div class="tagline">SASHIMI IDENTIFIER</div>
+    <div class="divider"></div>
+  </header>
+
+  <!-- API設定 -->
+  <div class="setup" id="setup">
+    <div class="setup-header" onclick="toggleSetup()">
+      <span>◆ API設定</span>
+      <span id="setupStatus">未設定</span>
+    </div>
+    <div class="setup-body">
+      <label>Gemini APIキー</label>
+      <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off">
+      <div class="help">
+        端末に保存されます。<a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> で取得可能。
+      </div>
+    </div>
+  </div>
+
+  <!-- 撮影/選択エリア -->
+  <div class="main-area">
+    <div class="photo-area" id="photoArea">
+      <div class="placeholder" id="placeholder">
+        <div class="placeholder-icon">魚</div>
+        <div class="placeholder-text">写真を選んでください</div>
+      </div>
+      <img id="preview" style="display:none;" alt="preview">
+    </div>
+
+    <div class="button-row">
+      <button class="btn-primary" onclick="document.getElementById('camera').click()">撮影</button>
+      <button class="btn-secondary" onclick="document.getElementById('gallery').click()">選択</button>
+    </div>
+
+    <input type="file" id="camera" accept="image/*" capture="environment" onchange="handleFile(event)">
+    <input type="file" id="gallery" accept="image/*" onchange="handleFile(event)">
+
+    <button class="btn-judge" id="judgeBtn" onclick="judge()" disabled>これは何？</button>
+  </div>
+
+  <!-- 結果表示 -->
+  <div id="resultArea"></div>
+
+  <footer>SASHIMI IDENTIFIER · powered by Gemini</footer>
+</div>
+
+<script>
+  // 永続化
+  const KEY_STORAGE = 'gemini_api_key_sashimi';
+  let imageBase64 = null;
+  let imageMimeType = null;
+
+  // 初期化
+  window.addEventListener('load', () => {
+    const saved = localStorage.getItem(KEY_STORAGE);
+    if (saved) {
+      document.getElementById('apiKey').value = saved;
+      updateSetupStatus();
+      document.getElementById('setup').classList.add('collapsed');
+    }
+    document.getElementById('apiKey').addEventListener('input', () => {
+      const v = document.getElementById('apiKey').value.trim();
+      if (v) localStorage.setItem(KEY_STORAGE, v);
+      else localStorage.removeItem(KEY_STORAGE);
+      updateSetupStatus();
+    });
+  });
+
+  function toggleSetup() {
+    document.getElementById('setup').classList.toggle('collapsed');
+  }
+
+  function updateSetupStatus() {
+    const v = document.getElementById('apiKey').value.trim();
+    document.getElementById('setupStatus').textContent = v ? '設定済' : '未設定';
+  }
+
+  // 画像選択処理
+  function handleFile(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target.result;
+      imageBase64 = dataUrl.split(',')[1];
+      imageMimeType = file.type;
+
+      document.getElementById('preview').src = dataUrl;
+      document.getElementById('preview').style.display = 'block';
+      document.getElementById('placeholder').style.display = 'none';
+      document.getElementById('photoArea').classList.add('has-image');
+      document.getElementById('judgeBtn').disabled = false;
+      document.getElementById('resultArea').innerHTML = '';
+    };
+    reader.readAsDataURL(file);
+  }
+
+  // 判別実行
+  async function judge() {
+    const apiKey = document.getElementById('apiKey').value.trim();
+    if (!apiKey) {
+      showError('APIキーを設定してください');
+      document.getElementById('setup').classList.remove('collapsed');
+      return;
+    }
+    if (!imageBase64) return;
+
+    const btn = document.getElementById('judgeBtn');
+    btn.disabled = true;
+    btn.textContent = '判別中...';
+
+    document.getElementById('resultArea').innerHTML = `
+      <div class="result">
+        <div class="loading">
+          <div class="loading-text">鑑定中<span class="dots"></span></div>
+        </div>
+      </div>
+    `;
+
+    const prompt = `この画像に写っている刺身（または魚の切り身）を判別してください。
+必ず以下のJSON形式のみで回答してください。前後に説明文やコードブロックは不要です。
+
+{
+  "name": "魚の名前(漢字とカタカナ両方。例: 鮪(マグロ))",
+  "confidence": "確信度(高/中/低)",
+  "taste": "味の特徴。脂の乗り、食感、味わいなど2-3文で",
+  "season_origin": "旬の時期と主な産地。簡潔に",
+  "distinguish": "似ている他の魚との見分け方を具体的に2-3文で"
+}
+
+刺身ではない画像、または判別不可能な場合は:
+{
+  "name": "判別不可",
+  "confidence": "低",
+  "taste": "理由を簡潔に",
+  "season_origin": "-",
+  "distinguish": "-"
+}`;
+
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [
+                { text: prompt },
+                { inline_data: { mime_type: imageMimeType, data: imageBase64 } }
+              ]
+            }],
+            generationConfig: {
+              temperature: 0.4,
+              responseMimeType: "application/json"
+            }
+          })
+        }
+      );
+
+      if (!response.ok) {
+        const err = await response.text();
+        throw new Error(`API Error (${response.status}): ${err.slice(0, 200)}`);
+      }
+
+      const data = await response.json();
+      const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!text) throw new Error('応答が空でした');
+
+      const cleaned = text.replace(/```json|```/g, '').trim();
+      const result = JSON.parse(cleaned);
+      showResult(result);
+
+    } catch (e) {
+      showError(`判別に失敗しました: ${e.message}`);
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'これは何？';
+    }
+  }
+
+  function showResult(r) {
+    const confidenceLabel = {
+      '高': 'CONFIDENCE · HIGH',
+      '中': 'CONFIDENCE · MEDIUM',
+      '低': 'CONFIDENCE · LOW'
+    }[r.confidence] || 'CONFIDENCE · -';
+
+    document.getElementById('resultArea').innerHTML = `
+      <div class="result">
+        <div class="result-name">${escapeHtml(r.name)}</div>
+        <div class="result-confidence">${confidenceLabel}</div>
+        <div class="result-divider"></div>
+
+        <div class="info-block">
+          <div class="info-label">味わい</div>
+          <div class="info-content">${escapeHtml(r.taste)}</div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-label">旬と産地</div>
+          <div class="info-content">${escapeHtml(r.season_origin)}</div>
+        </div>
+
+        <div class="info-block">
+          <div class="info-label">似た魚との見分け方</div>
+          <div class="info-content">${escapeHtml(r.distinguish)}</div>
+        </div>
+      </div>
+    `;
+  }
+
+  function showError(msg) {
+    document.getElementById('resultArea').innerHTML = `
+      <div class="result">
+        <div class="error">${escapeHtml(msg)}</div>
+      </div>
+    `;
+  }
+
+  function escapeHtml(s) {
+    if (!s) return '';
+    return String(s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+</script>
+</body>
+</html>
