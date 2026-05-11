@@ -5,26 +5,27 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>刺身判別</title>
+<title>おさしみはんてい</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&family=Noto+Sans+JP:wght@300;400;500&family=Josefin+Sans:wght@300;400&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 
   :root {
-    --ink: #1a1614;
-    --paper: #f5f0e8;
-    --paper-deep: #ebe3d5;
-    --vermilion: #b13a2c;
-    --vermilion-deep: #8b2818;
-    --gold: #b8924a;
-    --sumi: #2c2520;
-    --mist: rgba(26, 22, 20, 0.08);
+    --cream: #f8f3ea;
+    --cream-deep: #ede5d5;
+    --sand: #c9a87c;
+    --sand-deep: #a8855a;
+    --ink: #3a3632;
+    --ink-light: #6b6460;
+    --white: #ffffff;
+    --mist: rgba(58, 54, 50, 0.1);
+    --red: #c04e3a;
   }
 
   html, body {
-    background: var(--paper);
+    background: var(--cream);
     color: var(--ink);
     font-family: 'Noto Sans JP', sans-serif;
     min-height: 100vh;
@@ -32,11 +33,8 @@
   }
 
   body {
-    background-image:
-      radial-gradient(circle at 20% 10%, rgba(184, 146, 74, 0.06) 0%, transparent 40%),
-      radial-gradient(circle at 80% 90%, rgba(177, 58, 44, 0.04) 0%, transparent 40%);
-    padding: 24px 20px 40px;
-    max-width: 560px;
+    padding: 28px 20px 48px;
+    max-width: 520px;
     margin: 0 auto;
     position: relative;
   }
@@ -45,160 +43,197 @@
     content: '';
     position: fixed;
     inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.9' /%3E%3CfeColorMatrix values='0 0 0 0 0.1 0 0 0 0 0.08 0 0 0 0 0.07 0 0 0 0.04 0' /%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' /%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='0.85' /%3E%3CfeColorMatrix values='0 0 0 0 0.12 0 0 0 0 0.10 0 0 0 0 0.08 0 0 0 0.03 0' /%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' /%3E%3C/svg%3E");
     pointer-events: none;
     z-index: 1;
-    opacity: 0.6;
+    opacity: 0.5;
   }
 
   .container { position: relative; z-index: 2; }
 
-  /* ヘッダー */
+  /* ===== ヘッダー ===== */
   header {
     text-align: center;
-    padding: 12px 0 28px;
+    padding: 8px 0 32px;
     position: relative;
   }
 
-  .title-wrap {
-    display: inline-flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .seal {
-    width: 48px;
-    height: 48px;
-    background: var(--vermilion);
-    border-radius: 6px;
+  .settings-btn {
+    position: absolute;
+    top: 4px;
+    right: 0;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-family: 'Shippori Mincho', serif;
-    font-weight: 700;
-    color: var(--paper);
-    font-size: 22px;
-    letter-spacing: -2px;
-    box-shadow: 0 2px 8px rgba(177, 58, 44, 0.3);
-    transform: rotate(-3deg);
+    border-radius: 50%;
+    transition: background 0.2s;
+    flex: none;
+  }
+
+  .settings-btn:hover { background: var(--mist); }
+  .settings-btn svg { width: 20px; height: 20px; opacity: 0.5; }
+
+  .key-badge {
+    position: absolute;
+    top: 2px;
+    right: -2px;
+    width: 10px;
+    height: 10px;
+    background: #6ab04c;
+    border-radius: 50%;
+    border: 2px solid var(--cream);
+    display: none;
+  }
+
+  .key-badge.active { display: block; }
+
+  /* ロゴ */
+  .logo-fish {
+    margin-bottom: 10px;
   }
 
   h1 {
-    font-family: 'Shippori Mincho', serif;
+    font-family: 'Zen Maru Gothic', sans-serif;
     font-weight: 700;
-    font-size: 32px;
-    letter-spacing: 0.04em;
-    color: var(--sumi);
+    font-size: 34px;
+    letter-spacing: 0.12em;
+    color: var(--ink);
+    line-height: 1.1;
   }
 
   .tagline {
-    margin-top: 8px;
+    margin-top: 6px;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 11px;
-    letter-spacing: 0.4em;
-    color: var(--gold);
+    letter-spacing: 0.45em;
+    color: var(--sand);
+    font-weight: 300;
     text-transform: uppercase;
-    font-weight: 500;
   }
 
-  .divider {
-    margin: 16px auto 0;
-    width: 60px;
-    height: 1px;
-    background: var(--ink);
-    opacity: 0.2;
-  }
-
-  /* 設定エリア */
-  .setup {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid var(--mist);
-    border-radius: 12px;
-    padding: 18px;
-    margin-bottom: 20px;
-  }
-
-  .setup.collapsed { padding: 12px 18px; }
-
-  .setup-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    font-family: 'Shippori Mincho', serif;
-    font-size: 14px;
-    color: var(--sumi);
-  }
-
-  .setup-header span:last-child {
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 0.1em;
-  }
-
-  .setup-body {
+  .header-wave {
     margin-top: 14px;
-    transition: all 0.3s;
   }
 
-  .setup.collapsed .setup-body { display: none; }
-
-  label {
-    display: block;
-    font-size: 11px;
-    color: var(--sumi);
-    margin-bottom: 6px;
-    letter-spacing: 0.1em;
-    opacity: 0.7;
+  /* ===== APIキーモーダル ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(58, 54, 50, 0.5);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
   }
 
-  input[type="password"], input[type="text"] {
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--white);
+    border-radius: 20px;
+    padding: 28px 24px;
     width: 100%;
-    padding: 10px 12px;
-    border: 1px solid var(--mist);
-    border-radius: 8px;
-    background: var(--paper);
+    max-width: 380px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  .modal h2 {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: 0.05em;
+  }
+
+  .modal p {
+    font-size: 12px;
+    color: var(--ink-light);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .modal p a { color: var(--sand-deep); text-decoration: underline; }
+
+  .modal input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--mist);
+    border-radius: 10px;
+    background: var(--cream);
     font-size: 14px;
     color: var(--ink);
     font-family: inherit;
+    margin-bottom: 14px;
   }
 
-  input:focus { outline: 2px solid var(--gold); outline-offset: -1px; }
+  .modal input:focus { outline: 2px solid var(--sand); outline-offset: -1px; }
 
-  .help {
-    font-size: 11px;
-    color: var(--sumi);
-    opacity: 0.6;
-    margin-top: 6px;
-    line-height: 1.5;
+  .modal-btns { display: flex; gap: 10px; }
+
+  .btn-modal-save {
+    flex: 1;
+    padding: 13px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: 10px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: background 0.2s;
   }
 
-  .help a { color: var(--vermilion); text-decoration: underline; }
+  .btn-modal-save:hover { background: var(--ink-light); }
 
-  /* メイン操作エリア */
+  .btn-modal-cancel {
+    padding: 13px 18px;
+    background: transparent;
+    color: var(--ink-light);
+    border: 1.5px solid var(--mist);
+    border-radius: 10px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+  /* ===== メイン操作エリア ===== */
   .main-area {
-    background: rgba(255, 255, 255, 0.7);
-    border-radius: 16px;
-    padding: 24px;
+    background: var(--white);
+    border-radius: 20px;
+    padding: 22px;
     box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.04),
-      0 8px 24px rgba(26, 22, 20, 0.06);
-    margin-bottom: 20px;
+      0 2px 4px rgba(0,0,0,0.04),
+      0 8px 28px rgba(58, 54, 50, 0.07);
+    margin-bottom: 18px;
   }
 
   .photo-area {
     aspect-ratio: 1;
     border: 2px dashed var(--mist);
-    border-radius: 12px;
-    background: var(--paper);
+    border-radius: 14px;
+    background: var(--cream);
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     position: relative;
     margin-bottom: 16px;
+    transition: border-color 0.3s;
   }
 
-  .photo-area.has-image { border-style: solid; border-color: var(--gold); }
+  .photo-area.has-image {
+    border-style: solid;
+    border-color: var(--sand);
+  }
 
   .photo-area img {
     width: 100%;
@@ -209,20 +244,14 @@
   .placeholder {
     text-align: center;
     color: var(--ink);
-    opacity: 0.4;
+    opacity: 0.35;
     padding: 20px;
   }
 
-  .placeholder-icon {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 56px;
-    line-height: 1;
-    margin-bottom: 8px;
-    color: var(--vermilion);
-    opacity: 0.5;
-  }
+  .placeholder-icon { font-size: 52px; margin-bottom: 10px; line-height: 1; }
 
   .placeholder-text {
+    font-family: 'Zen Maru Gothic', sans-serif;
     font-size: 13px;
     letter-spacing: 0.1em;
   }
@@ -231,71 +260,77 @@
   .button-row {
     display: flex;
     gap: 10px;
+    margin-bottom: 12px;
   }
 
   button {
     flex: 1;
-    padding: 14px 16px;
+    padding: 13px 16px;
     border: none;
-    border-radius: 10px;
-    font-family: 'Shippori Mincho', serif;
+    border-radius: 12px;
+    font-family: 'Zen Maru Gothic', sans-serif;
     font-size: 15px;
     font-weight: 500;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
     cursor: pointer;
     transition: all 0.2s;
     -webkit-touch-callout: none;
   }
 
   button:active { transform: scale(0.97); }
-  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  button:disabled { opacity: 0.38; cursor: not-allowed; }
 
   .btn-primary {
-    background: var(--sumi);
-    color: var(--paper);
+    background: var(--ink);
+    color: var(--cream);
   }
 
   .btn-secondary {
-    background: var(--paper-deep);
-    color: var(--sumi);
+    background: var(--cream-deep);
+    color: var(--ink);
   }
 
   .btn-judge {
     width: 100%;
-    background: var(--vermilion);
-    color: var(--paper);
+    background: var(--sand);
+    color: var(--white);
     font-size: 16px;
+    font-weight: 700;
     padding: 16px;
-    margin-top: 12px;
-    box-shadow: 0 4px 12px rgba(177, 58, 44, 0.25);
+    box-shadow: 0 4px 14px rgba(201, 168, 124, 0.4);
+    letter-spacing: 0.15em;
   }
 
-  .btn-judge:disabled { background: #999; box-shadow: none; }
+  .btn-judge:not(:disabled):hover {
+    background: var(--sand-deep);
+    box-shadow: 0 6px 18px rgba(168, 133, 90, 0.4);
+  }
+
+  .btn-judge:disabled { background: #bbb; box-shadow: none; }
 
   input[type="file"] { display: none; }
 
-  /* 結果表示 */
+  /* ===== 結果表示 ===== */
   .result {
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 16px;
+    background: var(--white);
+    border-radius: 20px;
     padding: 24px;
     box-shadow:
-      0 1px 2px rgba(0, 0, 0, 0.04),
-      0 8px 24px rgba(26, 22, 20, 0.06);
-    border-top: 3px solid var(--vermilion);
-    animation: fadeUp 0.5s ease-out;
+      0 2px 4px rgba(0,0,0,0.04),
+      0 8px 28px rgba(58, 54, 50, 0.07);
+    animation: fadeUp 0.4s ease-out;
   }
 
   @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
+    from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }
   }
 
   .result-name {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 32px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 34px;
     font-weight: 700;
-    color: var(--sumi);
+    color: var(--ink);
     text-align: center;
     margin-bottom: 4px;
     letter-spacing: 0.05em;
@@ -303,23 +338,26 @@
 
   .result-confidence {
     text-align: center;
-    font-size: 11px;
-    color: var(--gold);
-    letter-spacing: 0.2em;
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    color: var(--sand);
+    letter-spacing: 0.35em;
     margin-bottom: 20px;
+    font-weight: 300;
   }
 
   .result-divider {
-    width: 40px;
-    height: 1px;
-    background: var(--ink);
-    opacity: 0.2;
-    margin: 16px auto;
+    width: 36px;
+    height: 2px;
+    background: var(--sand);
+    opacity: 0.4;
+    border-radius: 2px;
+    margin: 0 auto 20px;
   }
 
   .info-block {
-    margin-bottom: 18px;
-    padding-bottom: 18px;
+    margin-bottom: 16px;
+    padding-bottom: 16px;
     border-bottom: 1px dashed var(--mist);
   }
 
@@ -330,48 +368,33 @@
   }
 
   .info-label {
-    font-family: 'Shippori Mincho', serif;
-    font-size: 13px;
-    color: var(--vermilion);
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    color: var(--sand-deep);
     margin-bottom: 6px;
-    letter-spacing: 0.15em;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .info-label::before {
-    content: '';
-    width: 4px;
-    height: 4px;
-    background: var(--vermilion);
-    border-radius: 50%;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-weight: 400;
   }
 
   .info-content {
     font-size: 14px;
-    line-height: 1.7;
-    color: var(--sumi);
+    line-height: 1.8;
+    color: var(--ink);
+    font-weight: 300;
   }
 
   /* ローディング */
   .loading {
     text-align: center;
-    padding: 40px 20px;
+    padding: 36px 20px;
   }
 
   .loading-text {
-    font-family: 'Shippori Mincho', serif;
+    font-family: 'Zen Maru Gothic', sans-serif;
     font-size: 14px;
-    color: var(--sumi);
+    color: var(--ink-light);
     letter-spacing: 0.2em;
-    opacity: 0.7;
-  }
-
-  .dots {
-    display: inline-block;
-    width: 40px;
-    text-align: left;
   }
 
   .dots::after {
@@ -388,123 +411,149 @@
 
   /* エラー */
   .error {
-    background: rgba(177, 58, 44, 0.08);
-    border-left: 3px solid var(--vermilion);
+    background: rgba(192, 78, 58, 0.07);
+    border-left: 3px solid var(--red);
     padding: 14px 16px;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 13px;
-    color: var(--vermilion-deep);
-    line-height: 1.6;
+    color: var(--red);
+    line-height: 1.7;
   }
 
   /* フッター */
   footer {
     text-align: center;
-    margin-top: 30px;
+    margin-top: 28px;
+    font-family: 'Josefin Sans', sans-serif;
     font-size: 10px;
-    color: var(--sumi);
-    opacity: 0.4;
-    letter-spacing: 0.2em;
+    color: var(--ink);
+    opacity: 0.3;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
   }
 </style>
 </head>
 <body>
 <div class="container">
   <header>
-    <div class="title-wrap">
-      <div class="seal">鮮</div>
-      <div>
-        <h1>刺身判別</h1>
-      </div>
-    </div>
-    <div class="tagline">SASHIMI IDENTIFIER</div>
-    <div class="divider"></div>
-  </header>
+    <!-- 歯車ボタン（APIキー設定） -->
+    <button class="settings-btn" onclick="openModal()" title="API設定" style="position:absolute;top:4px;right:0;flex:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      <span class="key-badge" id="keyBadge"></span>
+    </button>
 
-  <!-- API設定 -->
-  <div class="setup" id="setup">
-    <div class="setup-header" onclick="toggleSetup()">
-      <span>◆ API設定</span>
-      <span id="setupStatus">未設定</span>
+    <!-- 魚ロゴ -->
+    <div class="logo-fish">
+      <svg width="90" height="56" viewBox="0 0 90 56" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 魚の体 -->
+        <path d="M22 28 C28 16, 52 12, 65 20 C72 24, 74 28, 72 32 C68 40, 48 44, 28 38 C18 35, 16 31, 22 28 Z" stroke="#c9a87c" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+        <!-- 尾びれ -->
+        <path d="M65 20 C74 14, 82 10, 80 20 C78 26, 80 30, 82 36 C82 44, 74 42, 65 32" stroke="#c9a87c" stroke-width="1.8" fill="none" stroke-linejoin="round"/>
+        <!-- 目 -->
+        <circle cx="30" cy="27" r="2.5" stroke="#c9a87c" stroke-width="1.5" fill="none"/>
+        <circle cx="30" cy="27" r="0.8" fill="#c9a87c"/>
+        <!-- 背びれ -->
+        <path d="M38 18 C42 10, 52 10, 56 18" stroke="#c9a87c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+        <!-- 波線 -->
+        <path d="M10 48 C16 44, 22 52, 28 48 C34 44, 40 52, 46 48 C52 44, 58 52, 64 48 C70 44, 76 52, 82 48" stroke="#c9a87c" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      </svg>
     </div>
-    <div class="setup-body">
-      <label>Gemini APIキー</label>
-      <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off">
-      <div class="help">
-        端末に保存されます。<a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> で取得可能。
-      </div>
-    </div>
-  </div>
+
+    <h1>おさしみはんてい</h1>
+    <div class="tagline">Sashimi Identifier</div>
+  </header>
 
   <!-- 撮影/選択エリア -->
   <div class="main-area">
     <div class="photo-area" id="photoArea">
       <div class="placeholder" id="placeholder">
-        <div class="placeholder-icon">魚</div>
+        <div class="placeholder-icon">🐟</div>
         <div class="placeholder-text">写真を選んでください</div>
       </div>
       <img id="preview" style="display:none;" alt="preview">
     </div>
 
     <div class="button-row">
-      <button class="btn-primary" onclick="document.getElementById('camera').click()">撮影</button>
-      <button class="btn-secondary" onclick="document.getElementById('gallery').click()">選択</button>
+      <button class="btn-primary" onclick="document.getElementById('camera').click()">📷 撮影</button>
+      <button class="btn-secondary" onclick="document.getElementById('gallery').click()">🖼 選択</button>
     </div>
 
     <input type="file" id="camera" accept="image/*" capture="environment" onchange="handleFile(event)">
     <input type="file" id="gallery" accept="image/*" onchange="handleFile(event)">
 
-    <button class="btn-judge" id="judgeBtn" onclick="judge()" disabled>これは何？</button>
+    <button class="btn-judge" id="judgeBtn" onclick="judge()" disabled>これはなに？</button>
   </div>
 
   <!-- 結果表示 -->
   <div id="resultArea"></div>
 
-  <footer>SASHIMI IDENTIFIER · powered by Gemini</footer>
+  <footer>Sashimi Identifier · Powered by Gemini</footer>
+</div>
+
+<!-- APIキーモーダル -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <h2>🔑 APIキーの設定</h2>
+    <p>
+      Gemini APIキーを入力してください。<br>
+      キーはこの端末にのみ保存されます。<br>
+      <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> で無料取得できます。
+    </p>
+    <input type="password" id="apiKeyInput" placeholder="AIza..." autocomplete="off">
+    <div class="modal-btns">
+      <button class="btn-modal-cancel" id="modalCancelBtn" onclick="closeModal()">キャンセル</button>
+      <button class="btn-modal-save" onclick="saveApiKey()">保存する</button>
+    </div>
+  </div>
 </div>
 
 <script>
-  // 永続化
   const KEY_STORAGE = 'gemini_api_key_sashimi';
   let imageBase64 = null;
   let imageMimeType = null;
 
-  // 初期化
   window.addEventListener('load', () => {
     const saved = localStorage.getItem(KEY_STORAGE);
     if (saved) {
-      document.getElementById('apiKey').value = saved;
-      updateSetupStatus();
-      document.getElementById('setup').classList.add('collapsed');
+      document.getElementById('apiKeyInput').value = saved;
+      document.getElementById('keyBadge').classList.add('active');
+    } else {
+      // 初回：モーダルを自動で開く
+      openModal(true);
     }
-    document.getElementById('apiKey').addEventListener('input', () => {
-      const v = document.getElementById('apiKey').value.trim();
-      if (v) localStorage.setItem(KEY_STORAGE, v);
-      else localStorage.removeItem(KEY_STORAGE);
-      updateSetupStatus();
-    });
   });
 
-  function toggleSetup() {
-    document.getElementById('setup').classList.toggle('collapsed');
+  function openModal(isFirst = false) {
+    document.getElementById('modalOverlay').classList.add('active');
+    // 初回は「キャンセル」を隠す
+    document.getElementById('modalCancelBtn').style.display = isFirst ? 'none' : '';
+    setTimeout(() => document.getElementById('apiKeyInput').focus(), 100);
   }
 
-  function updateSetupStatus() {
-    const v = document.getElementById('apiKey').value.trim();
-    document.getElementById('setupStatus').textContent = v ? '設定済' : '未設定';
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('active');
+  }
+
+  function saveApiKey() {
+    const v = document.getElementById('apiKeyInput').value.trim();
+    if (!v) { alert('APIキーを入力してください'); return; }
+    localStorage.setItem(KEY_STORAGE, v);
+    document.getElementById('keyBadge').classList.add('active');
+    closeModal();
   }
 
   // 画像選択処理
   function handleFile(event) {
     const file = event.target.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = (e) => {
       const dataUrl = e.target.result;
       imageBase64 = dataUrl.split(',')[1];
       imageMimeType = file.type;
-
       document.getElementById('preview').src = dataUrl;
       document.getElementById('preview').style.display = 'block';
       document.getElementById('placeholder').style.display = 'none';
@@ -517,17 +566,16 @@
 
   // 判別実行
   async function judge() {
-    const apiKey = document.getElementById('apiKey').value.trim();
+    const apiKey = localStorage.getItem(KEY_STORAGE);
     if (!apiKey) {
-      showError('APIキーを設定してください');
-      document.getElementById('setup').classList.remove('collapsed');
+      openModal();
       return;
     }
     if (!imageBase64) return;
 
     const btn = document.getElementById('judgeBtn');
     btn.disabled = true;
-    btn.textContent = '判別中...';
+    btn.textContent = '鑑定中…';
 
     document.getElementById('resultArea').innerHTML = `
       <div class="result">
@@ -595,35 +643,32 @@
       showError(`判別に失敗しました: ${e.message}`);
     } finally {
       btn.disabled = false;
-      btn.textContent = 'これは何？';
+      btn.textContent = 'これはなに？';
     }
   }
 
   function showResult(r) {
     const confidenceLabel = {
-      '高': 'CONFIDENCE · HIGH',
-      '中': 'CONFIDENCE · MEDIUM',
-      '低': 'CONFIDENCE · LOW'
-    }[r.confidence] || 'CONFIDENCE · -';
+      '高': 'Confidence · High',
+      '中': 'Confidence · Medium',
+      '低': 'Confidence · Low'
+    }[r.confidence] || 'Confidence · —';
 
     document.getElementById('resultArea').innerHTML = `
       <div class="result">
         <div class="result-name">${escapeHtml(r.name)}</div>
         <div class="result-confidence">${confidenceLabel}</div>
         <div class="result-divider"></div>
-
         <div class="info-block">
-          <div class="info-label">味わい</div>
+          <div class="info-label">Taste · 味わい</div>
           <div class="info-content">${escapeHtml(r.taste)}</div>
         </div>
-
         <div class="info-block">
-          <div class="info-label">旬と産地</div>
+          <div class="info-label">Season · 旬と産地</div>
           <div class="info-content">${escapeHtml(r.season_origin)}</div>
         </div>
-
         <div class="info-block">
-          <div class="info-label">似た魚との見分け方</div>
+          <div class="info-label">How to tell · 見分け方</div>
           <div class="info-content">${escapeHtml(r.distinguish)}</div>
         </div>
       </div>
@@ -632,9 +677,7 @@
 
   function showError(msg) {
     document.getElementById('resultArea').innerHTML = `
-      <div class="result">
-        <div class="error">${escapeHtml(msg)}</div>
-      </div>
+      <div class="result"><div class="error">${escapeHtml(msg)}</div></div>
     `;
   }
 
