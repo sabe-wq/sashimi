@@ -92,6 +92,146 @@
 
   .key-badge.active { display: block; }
 
+  .info-btn {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 36px;
+    height: 36px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background 0.2s;
+    flex: none;
+  }
+  .info-btn:hover { background: var(--mist); }
+  .info-btn svg { opacity: 0.5; }
+
+  /* フィードバック */
+  .feedback-area {
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px dashed var(--mist);
+  }
+  .feedback-label {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 10px;
+    color: var(--ink-light);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .feedback-btns { display: flex; gap: 10px; }
+  .btn-correct {
+    flex: 1; padding: 11px; border: none; border-radius: 10px;
+    background: #e8f5e9; color: #388e3c;
+    font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px;
+    font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-wrong {
+    flex: 1; padding: 11px; border: none; border-radius: 10px;
+    background: #fce8e6; color: #c04e3a;
+    font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px;
+    font-weight: 700; cursor: pointer; transition: all 0.2s;
+  }
+  .btn-correct:active, .btn-wrong:active { transform: scale(0.97); }
+  .correct-input-area {
+    margin-top: 10px; display: none;
+  }
+  .correct-input-area input {
+    width: 100%; padding: 10px 12px;
+    border: 1.5px solid var(--mist); border-radius: 10px;
+    background: var(--cream); font-size: 14px; color: var(--ink);
+    font-family: inherit; margin-bottom: 8px;
+  }
+  .btn-submit-correct {
+    width: 100%; padding: 11px; border: none; border-radius: 10px;
+    background: var(--ink); color: var(--cream);
+    font-family: 'Zen Maru Gothic', sans-serif; font-size: 14px;
+    font-weight: 700; cursor: pointer;
+  }
+  .feedback-done {
+    text-align: center; padding: 12px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 14px; color: var(--ink-light);
+  }
+  .feedback-count {
+    text-align: center; font-size: 11px;
+    color: var(--sand); margin-top: 4px;
+    font-family: 'Josefin Sans', sans-serif;
+    letter-spacing: 0.2em;
+  }
+
+  /* Aboutモーダル */
+  .about-modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(58,54,50,0.5); z-index: 200;
+    align-items: flex-end; justify-content: center;
+    padding: 0;
+  }
+  .about-modal.active { display: flex; }
+  .about-sheet {
+    background: var(--white); border-radius: 24px 24px 0 0;
+    padding: 28px 24px 48px; width: 100%; max-width: 560px;
+    max-height: 85vh; overflow-y: auto;
+    animation: slideUp 0.3s ease-out;
+  }
+  @keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+  }
+  .about-handle {
+    width: 40px; height: 4px; background: var(--mist);
+    border-radius: 2px; margin: 0 auto 20px;
+  }
+  .about-sheet h2 {
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 20px; font-weight: 700;
+    color: var(--ink); margin-bottom: 20px;
+    text-align: center;
+  }
+  .about-section { margin-bottom: 22px; }
+  .about-section h3 {
+    font-family: 'Josefin Sans', sans-serif;
+    font-size: 11px; color: var(--sand-deep);
+    letter-spacing: 0.3em; text-transform: uppercase;
+    margin-bottom: 8px; font-weight: 400;
+  }
+  .about-section p {
+    font-size: 14px; color: var(--ink);
+    line-height: 1.85; font-weight: 300;
+  }
+  .about-section .step {
+    display: flex; gap: 12px; align-items: flex-start;
+    margin-bottom: 10px;
+  }
+  .step-num {
+    min-width: 24px; height: 24px;
+    background: var(--sand); color: var(--white);
+    border-radius: 50%; display: flex;
+    align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    font-family: 'Josefin Sans', sans-serif;
+  }
+  .step-text { font-size: 13px; line-height: 1.7; padding-top: 3px; }
+  .about-close {
+    width: 100%; padding: 14px; border: none; border-radius: 12px;
+    background: var(--cream-deep); color: var(--ink);
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 15px; font-weight: 700; cursor: pointer;
+    margin-top: 8px;
+  }
+  .learn-stats {
+    background: var(--cream); border-radius: 12px;
+    padding: 14px 16px; margin-top: 10px;
+    font-size: 13px; color: var(--ink-light); line-height: 1.7;
+  }
+
   /* ロゴ */
   .logo-fish {
     margin-bottom: 4px;
@@ -436,6 +576,14 @@
 <body>
 <div class="container">
   <header>
+    <!-- ℹ️ボタン -->
+    <button class="info-btn" onclick="openAbout()" title="このアプリについて" style="position:absolute;top:4px;left:0;flex:none;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+        <circle cx="12" cy="12" r="10"/>
+        <line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/>
+        <line x1="12" y1="12" x2="12" y2="16"/>
+      </svg>
+    </button>
     <!-- 歯車ボタン（APIキー設定） -->
     <button class="settings-btn" onclick="openModal()" title="API設定" style="position:absolute;top:4px;right:0;flex:none;">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -476,6 +624,43 @@
   <div id="resultArea"></div>
 
   <footer>Sashimi Identifier · Powered by Gemini</footer>
+</div>
+
+<!-- Aboutモーダル -->
+<div class="about-modal" id="aboutModal" onclick="closeAboutOutside(event)">
+  <div class="about-sheet" id="aboutSheet">
+    <div class="about-handle"></div>
+    <h2>🐟 このアプリについて</h2>
+
+    <div class="about-section">
+      <h3>How it works · 判定の仕組み</h3>
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-text">写真を撮影または選択すると、画像データがGoogleのAI（Gemini）に送信されます。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-text">GeminiのAIが画像を解析し、魚の種類・味わい・旬・見分け方を判定して返答します。</div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-text">結果を画面に表示します。確信度（High / Medium / Low）も合わせて表示されます。</div>
+      </div>
+    </div>
+
+    <div class="about-section">
+      <h3>Learning · 間違いから学ぶ仕組み</h3>
+      <p>判定結果が間違っていた場合、「❌ 違った」ボタンで正解の魚名を教えてください。<br>その情報はこの端末に記録され、次回の判定時にAIへのヒントとして自動で活用されます。<br>使うほどこの端末での精度が上がっていきます。</p>
+      <div class="learn-stats" id="learnStats">学習データを読み込み中...</div>
+    </div>
+
+    <div class="about-section">
+      <h3>Privacy · データについて</h3>
+      <p>写真はAIの判定のためだけに使用され、保存はされません。学習データはこの端末内のみに保存され、外部には送信されません。APIキーも同様に端末内にのみ保存されます。</p>
+    </div>
+
+    <button class="about-close" onclick="closeAbout()">閉じる</button>
+  </div>
 </div>
 
 <!-- APIキーモーダル -->
@@ -588,7 +773,7 @@
   "taste": "理由を簡潔に",
   "season_origin": "-",
   "distinguish": "-"
-}`;
+}` + buildFeedbackHint();
 
     try {
       const response = await fetch(
@@ -657,6 +842,17 @@
           <div class="info-content">${escapeHtml(r.distinguish)}</div>
         </div>
       </div>
+      <div class="feedback-area" id="feedbackArea">
+        <div class="feedback-label">Was this correct? · 判定は合ってましたか？</div>
+        <div class="feedback-btns">
+          <button class="btn-correct" onclick="feedbackCorrect('${escapeHtml(r.name)}')">✅ 合ってた</button>
+          <button class="btn-wrong" onclick="showWrongInput('${escapeHtml(r.name)}')">❌ 違った</button>
+        </div>
+        <div class="correct-input-area" id="correctInputArea">
+          <input type="text" id="correctFishInput" placeholder="正解の魚名を入力（例：ヒラメ）">
+          <button class="btn-submit-correct" onclick="feedbackWrong('${escapeHtml(r.name)}')">送信</button>
+        </div>
+      </div>
     `;
   }
 
@@ -664,6 +860,69 @@
     document.getElementById('resultArea').innerHTML = `
       <div class="result"><div class="error">${escapeHtml(msg)}</div></div>
     `;
+  }
+
+  // ===== フィードバック機能 =====
+  const FB_STORAGE = 'sashimi_feedback_v1';
+
+  function getFeedbacks() {
+    try { return JSON.parse(localStorage.getItem(FB_STORAGE) || '[]'); } catch(e) { return []; }
+  }
+
+  function saveFeedbacks(arr) {
+    localStorage.setItem(FB_STORAGE, JSON.stringify(arr.slice(-30))); // 最大30件
+  }
+
+  function feedbackCorrect(predicted) {
+    document.getElementById('feedbackArea').innerHTML =
+      '<div class="feedback-done">✅ ありがとうございます！記録しました。</div>';
+  }
+
+  function showWrongInput(predicted) {
+    document.getElementById('correctInputArea').style.display = 'block';
+    document.getElementById('correctFishInput').focus();
+  }
+
+  function feedbackWrong(predicted) {
+    const correct = document.getElementById('correctFishInput').value.trim();
+    if (!correct) { alert('正解の魚名を入力してください'); return; }
+    const arr = getFeedbacks();
+    arr.push({ predicted, correct, date: new Date().toISOString().slice(0,10) });
+    saveFeedbacks(arr);
+    document.getElementById('feedbackArea').innerHTML =
+      '<div class="feedback-done">📝 記録しました！次回の判定に活かします。</div>' +
+      '<div class="feedback-count">学習データ ' + getFeedbacks().length + ' 件</div>';
+  }
+
+  function buildFeedbackHint() {
+    const arr = getFeedbacks();
+    if (arr.length === 0) return '';
+    const hints = arr.map(f => `「${f.predicted}」→ 実際は「${f.correct}」`).join('、');
+    return `
+
+【この端末の学習メモ】過去にこんな誤判定がありました：${hints}。これらの魚を混同しないよう特に注意してください。`;
+  }
+
+  // ===== Aboutモーダル =====
+  function openAbout() {
+    document.getElementById('aboutModal').classList.add('active');
+    // 学習データの統計を更新
+    const arr = getFeedbacks();
+    const stats = document.getElementById('learnStats');
+    if (arr.length === 0) {
+      stats.textContent = 'まだ学習データはありません。判定後に「❌ 違った」で正解を教えると蓄積されます。';
+    } else {
+      const items = arr.map(f => `・${f.predicted} → ${f.correct}（${f.date}）`).join('<br>');
+      stats.innerHTML = `記録件数：${arr.length}件<br><br>${items}`;
+    }
+  }
+
+  function closeAbout() {
+    document.getElementById('aboutModal').classList.remove('active');
+  }
+
+  function closeAboutOutside(e) {
+    if (e.target === document.getElementById('aboutModal')) closeAbout();
   }
 
   function escapeHtml(s) {
