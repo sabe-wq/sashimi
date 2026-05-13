@@ -96,20 +96,25 @@
     position: absolute;
     top: 4px;
     left: 0;
-    width: 36px;
-    height: 36px;
     border: none;
-    background: transparent;
+    background: var(--sand);
+    color: var(--white);
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 50%;
+    gap: 5px;
+    border-radius: 20px;
+    padding: 7px 14px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
     transition: background 0.2s;
     flex: none;
+    letter-spacing: 0.05em;
   }
-  .info-btn:hover { background: var(--mist); }
-  .info-btn svg { opacity: 0.5; }
+  .info-btn:hover { background: var(--sand-deep); }
+  .info-btn svg { opacity: 1; }
 
   /* フィードバック */
   .feedback-area {
@@ -578,11 +583,12 @@
   <header>
     <!-- ℹ️ボタン -->
     <button class="info-btn" onclick="openAbout()" title="このアプリについて" style="position:absolute;top:4px;left:0;flex:none;">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="15" height="15">
         <circle cx="12" cy="12" r="10"/>
-        <line x1="12" y1="8" x2="12" y2="8" stroke-width="2.5"/>
+        <line x1="12" y1="8" x2="12" y2="8" stroke-width="3"/>
         <line x1="12" y1="12" x2="12" y2="16"/>
       </svg>
+      使い方
     </button>
     <!-- 歯車ボタン（APIキー設定） -->
     <button class="settings-btn" onclick="openModal()" title="API設定" style="position:absolute;top:4px;right:0;flex:none;">
